@@ -3,10 +3,12 @@ package com.example.lazarus_auth_system.infra.controllers;
 import com.example.lazarus_auth_system.domain.enums.Role;
 import com.example.lazarus_auth_system.dtos.mission_reports.MissionReportConfidential;
 import com.example.lazarus_auth_system.dtos.mission_reports.MissionReportGeneral;
+import com.example.lazarus_auth_system.dtos.mission_reports.MissionUpdateDTO;
 import com.example.lazarus_auth_system.infra.persistance.MissionEntity;
 import com.example.lazarus_auth_system.infra.persistance.MissionRepository;
 import com.example.lazarus_auth_system.infra.persistance.UserEntity;
 import com.example.lazarus_auth_system.services.AuthService;
+import com.example.lazarus_auth_system.services.MissionService;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,6 +32,9 @@ public class LazarusControllers {
     @Autowired
     private MissionRepository missionRepository;
 
+    @Autowired
+    private MissionService missionService;
+
     //todo Return credentials
     @GetMapping("/users/me")
     public ResponseEntity<String> getCredentials() {
@@ -47,14 +52,14 @@ public class LazarusControllers {
 
     //todo Apenas para ENGINEER ou SCIENTIST
     @GetMapping("/mission")
-    public ResponseEntity<?> getMissionInformation() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not authenticated");
-        }
-
-        var principal = (UserEntity) authentication.getPrincipal();
+    public ResponseEntity<?> getMissionInformation(@AuthenticationPrincipal UserEntity principal) {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//
+//        if (authentication == null || !authentication.isAuthenticated()) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not authenticated");
+//        }
+//
+//        var principal = (UserEntity) authentication.getPrincipal();
 
         Optional<MissionEntity> mission = missionRepository.findByMissionCode(principal.getMissionCode());
 
@@ -77,12 +82,13 @@ public class LazarusControllers {
 
 
     //todo Apenas para SCIENTIST
-//    @PutMapping("/missions")
-//    public ResponseEntity<?> updateMissionInformation (@RequestBody String newStatus) {}
+    @PatchMapping("/missions")
+    public ResponseEntity<?> updateMissionInformation (@RequestBody MissionUpdateDTO updateDTO, @AuthenticationPrincipal UserEntity user) {
+        return missionService.updateMissionStatus(updateDTO, user);
+    }
 
 
     //todo Apenas para SCIENTIST, informações completas se o mission for confidential
-//    @PreAuthorize("hasRole('SCIENTIST')")
     @GetMapping("/mission/confidential")
     public ResponseEntity<?> getConfidentialInformation(@AuthenticationPrincipal UserEntity user) {
 

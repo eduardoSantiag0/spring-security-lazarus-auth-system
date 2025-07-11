@@ -20,13 +20,13 @@ public class TokenService {
     public String generateToken(UserEntity user) throws Exception {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
-            String token = JWT.create()
+            return JWT.create()
                     .withIssuer("auth-lazarus")
                     .withSubject(user.getUsername())
                     .withExpiresAt(generateExpirationDate())
+                    .withClaim("mission_code",user.getMissionCode())
                     .sign(algorithm);
 
-            return token;
         } catch (Exception ex) {
             throw new Exception("Error while generating token");
         }

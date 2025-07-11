@@ -3,6 +3,7 @@ package com.example.lazarus_auth_system.infra.controllers;
 import com.example.lazarus_auth_system.dtos.AuthenticationDTO;
 import com.example.lazarus_auth_system.dtos.LoginTokenResponseDTO;
 import com.example.lazarus_auth_system.dtos.RegisterDTO;
+import com.example.lazarus_auth_system.dtos.ChangeLoginDTO;
 import com.example.lazarus_auth_system.infra.persistance.UserEntity;
 import com.example.lazarus_auth_system.securiy.TokenService;
 import com.example.lazarus_auth_system.services.AuthService;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,14 +51,18 @@ public class AuthController {
 
 
     //todo
-//    @PostMapping("/alterar-login")
+//    @PostMapping("/esqueci-minha-senha")
 //    public ResponseEntity<String> alterarLogin(@RequestBody @Validated AuthenticationDTO data) {
 //    }
 
+    @PostMapping("/update-login")
+    public ResponseEntity<?> esqueciMinhaSenha(@RequestBody ChangeLoginDTO resetPasswordDTO, @AuthenticationPrincipal UserEntity user) {
+        return authService.changeCredentials(resetPasswordDTO, user);
+
+    }
+
     //todo
-//    @PostMapping("/esueci-minha-senha")
-
-
+//    @PostMapping("/refresh")
 
 
 }

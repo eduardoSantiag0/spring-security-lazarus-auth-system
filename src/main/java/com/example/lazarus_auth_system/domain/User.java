@@ -4,10 +4,10 @@ package com.example.lazarus_auth_system.domain;
 import com.example.lazarus_auth_system.domain.enums.Role;
 
 public class User {
-    private String username;
-    private String password;
-    private Role role;
-    private Mission missionCode;
+    private final String username;
+    private final String password;
+    private final Role role;
+    private final Mission missionCode;
 
     public User(String username, String password, Role role, Mission missionCode) {
         this.username = username;

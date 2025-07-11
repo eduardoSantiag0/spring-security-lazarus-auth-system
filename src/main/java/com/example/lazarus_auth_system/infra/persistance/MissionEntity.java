@@ -11,9 +11,6 @@ import java.util.List;
 @Table(name = "Missions")
 public class MissionEntity {
 
-    public MissionEntity() {
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "mission_id", nullable = false)
@@ -37,6 +34,11 @@ public class MissionEntity {
 
     @Column(name = "planet_name", nullable = false)
     private String planetName;
+
+
+    public MissionEntity() {
+    }
+
 
     public MissionEntity(int missionCode, String description, Classification classification, MissionStatus missionStatus, String planetName) {
         this.missionCode = missionCode;
@@ -68,5 +70,29 @@ public class MissionEntity {
 
     public String getPlanetName() {
         return planetName;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setMissionCode(int missionCode) {
+        this.missionCode = missionCode;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setClassification(Classification classification) {
+        this.classification = classification;
+    }
+
+    public void setMissionStatus(MissionStatus missionStatus) {
+        this.missionStatus = missionStatus;
+    }
+
+    public void setPlanetName(String planetName) {
+        this.planetName = planetName;
     }
 }

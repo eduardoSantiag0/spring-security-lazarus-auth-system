@@ -7,10 +7,10 @@ import java.util.List;
 
 public class Mission {
     private final int missionCode;
-    private String description;
-    private Classification classification;
-    private MissionStatus missionStatus;
-    private String planetName;
+    private final String description;
+    private final Classification classification;
+    private final MissionStatus missionStatus;
+    private final String planetName;
 
     public Mission(int missionCode, String description, Classification classification,  MissionStatus missionStatus, String planetName) {
         this.missionCode = missionCode;

@@ -29,6 +29,7 @@ public class UserEntity implements UserDetails {
     @Column(name = "role", nullable = false)
     private Role role;
 
+
     private int missionCode;
 
     public UserEntity(String username, String password, Role role, int missionCode) {
@@ -87,5 +88,21 @@ public class UserEntity implements UserDetails {
 
     public int getMissionCode() {
         return missionCode;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public void setMissionCode(int missionCode) {
+        this.missionCode = missionCode;
     }
 }

@@ -1,6 +1,7 @@
 package com.example.lazarus_auth_system.services;
 
 import com.example.lazarus_auth_system.dtos.RegisterDTO;
+import com.example.lazarus_auth_system.dtos.ChangeLoginDTO;
 import com.example.lazarus_auth_system.infra.persistance.MissionRepository;
 import com.example.lazarus_auth_system.infra.persistance.UserEntity;
 import com.example.lazarus_auth_system.infra.persistance.UserRepository;
@@ -48,6 +49,25 @@ public class AuthService implements UserDetailsService {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body("User registered: " + newUser.getUsername());
+    }
+
+    public ResponseEntity<?> changeCredentials(ChangeLoginDTO resetPasswordDTO, UserEntity user) {
+        // Checar se passsord inserida bate com da conta do user
+        if (!passwordEncoder.matches(resetPasswordDTO.currentPassword(), user.getPassword())) {
+            return ResponseEntity.badRequest().body("Wrong password");
+        }
+
+        // Atualizar conta
+        if(resetPasswordDTO.newPassword().isPresent())
+            user.setPassword(passwordEncoder.encode(resetPasswordDTO.newPassword().get()));
+        if(resetPasswordDTO.newUsername().isPresent())
+            user.setUsername(resetPasswordDTO.newUsername().get());
+
+        // Salvar
+        userRepository.save(user);
+
+        return ResponseEntity.ok("Credentials updated successfully");
+
     }
 
 }
