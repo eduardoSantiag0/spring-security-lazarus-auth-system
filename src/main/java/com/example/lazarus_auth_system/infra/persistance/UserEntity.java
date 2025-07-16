@@ -29,6 +29,9 @@ public class UserEntity implements UserDetails {
     @Column(name = "role", nullable = false)
     private Role role;
 
+    @Column(name = "refresh_token")
+    private String refresh_token;
+
 
     private int missionCode;
 
@@ -105,4 +108,14 @@ public class UserEntity implements UserDetails {
     public void setMissionCode(int missionCode) {
         this.missionCode = missionCode;
     }
+
+    public String getRefresh_token() {
+        return refresh_token;
+    }
+
+    public void setRefresh_token(String refresh_token) {
+        this.refresh_token = refresh_token;
+    }
+
+
 }

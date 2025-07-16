@@ -1,6 +1,7 @@
 package com.example.lazarus_auth_system.services;
 
 import com.example.lazarus_auth_system.dtos.mission_reports.MissionReportConfidential;
+import com.example.lazarus_auth_system.dtos.mission_reports.MissionReportGeneral;
 import com.example.lazarus_auth_system.dtos.mission_reports.MissionUpdateDTO;
 import com.example.lazarus_auth_system.infra.persistance.MissionEntity;
 import com.example.lazarus_auth_system.infra.persistance.MissionRepository;
@@ -23,7 +24,6 @@ public class MissionService {
 
     public ResponseEntity<?> updateMissionStatus(MissionUpdateDTO updateDTO, UserEntity user) {
 
-
         Optional<MissionEntity> optionalMission = missionRepository.findByMissionCode(user.getMissionCode());
         if (optionalMission.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -42,6 +42,52 @@ public class MissionService {
 
         return ResponseEntity.ok("Mission Updated");
 
+    }
+
+    public ResponseEntity<?> getMissionInformation (UserEntity user) {
+
+        Optional<MissionEntity> mission = missionRepository.findByMissionCode(user.getMissionCode());
+
+        if (mission.isPresent()) {
+            MissionEntity activeMission = mission.get();
+
+            MissionReportGeneral confidentialReport = new MissionReportGeneral(
+                    activeMission.getMissionCode(),
+                    activeMission.getClassification(),
+                    activeMission.getPlanetName());
+
+            return ResponseEntity.ok(confidentialReport);
+
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("Mission not found for user");
+    }
+
+    public ResponseEntity<?> getConfidentialInformation(UserEntity user) {
+
+        Optional<MissionEntity> mission = missionRepository.findByMissionCode(user.getMissionCode());
+
+        if (mission.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Mission not found for user");
+        }
+
+        MissionEntity activeMission = mission.get();
+
+        MissionReportConfidential confidentialReport = new MissionReportConfidential(
+                activeMission.getMissionCode(),
+                activeMission.getDescription(),
+                activeMission.getClassification(),
+                activeMission.getMissionStatus(),
+                activeMission.getPlanetName()
+        );
+
+        System.out.println("User role: " + user.getRole());
+        System.out.println("Authorities: " + user.getAuthorities());
+
+
+        return ResponseEntity.ok(confidentialReport);
     }
 
 }

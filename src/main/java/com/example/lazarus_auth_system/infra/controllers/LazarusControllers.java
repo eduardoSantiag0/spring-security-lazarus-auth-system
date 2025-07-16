@@ -1,42 +1,40 @@
 package com.example.lazarus_auth_system.infra.controllers;
 
-import com.example.lazarus_auth_system.domain.enums.Role;
-import com.example.lazarus_auth_system.dtos.mission_reports.MissionReportConfidential;
-import com.example.lazarus_auth_system.dtos.mission_reports.MissionReportGeneral;
 import com.example.lazarus_auth_system.dtos.mission_reports.MissionUpdateDTO;
-import com.example.lazarus_auth_system.infra.persistance.MissionEntity;
-import com.example.lazarus_auth_system.infra.persistance.MissionRepository;
 import com.example.lazarus_auth_system.infra.persistance.UserEntity;
+import com.example.lazarus_auth_system.securiy.SecurityConfiguration;
 import com.example.lazarus_auth_system.services.AuthService;
 import com.example.lazarus_auth_system.services.MissionService;
-import org.apache.coyote.Response;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @RequestMapping("/lazarus")
 @RestController
+@Tag(name = "lazarus", description = "Controller to get User details and mission information")
+@SecurityRequirement(name = SecurityConfiguration.SECURITY_HEADER)
 public class LazarusControllers {
 
     @Autowired
-    private AuthService service;
+    private AuthService authService;
 
-    @Autowired
-    private MissionRepository missionRepository;
 
     @Autowired
     private MissionService missionService;
 
-    //todo Return credentials
     @GetMapping("/users/me")
+    @Operation(summary = "Get User credentials")
+    @ApiResponse(responseCode = "200", description = "User found")
+    @ApiResponse(responseCode = "401", description = "User not authenticated")
     public ResponseEntity<String> getCredentials() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -50,70 +48,39 @@ public class LazarusControllers {
 
     }
 
-    //todo Apenas para ENGINEER ou SCIENTIST
     @GetMapping("/mission")
+    @Operation(summary = "Get mission information",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Mission information returned"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized")
+            })
     public ResponseEntity<?> getMissionInformation(@AuthenticationPrincipal UserEntity principal) {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//        if (authentication == null || !authentication.isAuthenticated()) {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not authenticated");
-//        }
-//
-//        var principal = (UserEntity) authentication.getPrincipal();
+        return missionService.getMissionInformation(principal);
+    }
 
-        Optional<MissionEntity> mission = missionRepository.findByMissionCode(principal.getMissionCode());
 
-        if (mission.isPresent()) {
-            MissionEntity activeMission = mission.get();
-
-            MissionReportGeneral confidentialReport = new MissionReportGeneral(
-                    activeMission.getMissionCode(),
-                    activeMission.getClassification(),
-                    activeMission.getPlanetName());
-
-            return ResponseEntity.ok(confidentialReport);
-
-        }
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body("Mission not found for user");
+    @GetMapping("/mission/confidential")
+    @Operation(summary = "Update mission information (SCIENTIST only)",
+            responses = { @ApiResponse(responseCode = "200", description = "Mission updated"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized"),
+                    @ApiResponse(responseCode = "403", description = "Forbidden")
+            })
+    public ResponseEntity<?> getConfidentialInformation(@AuthenticationPrincipal UserEntity user) {
+        return missionService.getConfidentialInformation(user);
 
     }
 
 
-    //todo Apenas para SCIENTIST
-    @PatchMapping("/missions")
+    @PatchMapping("/mission")
+    @Operation(summary = "Update mission information (SCIENTIST only)",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Mission updated"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized"),
+                    @ApiResponse(responseCode = "403", description = "Forbidden")
+            })
     public ResponseEntity<?> updateMissionInformation (@RequestBody MissionUpdateDTO updateDTO, @AuthenticationPrincipal UserEntity user) {
         return missionService.updateMissionStatus(updateDTO, user);
     }
 
-
-    //todo Apenas para SCIENTIST, informações completas se o mission for confidential
-    @GetMapping("/mission/confidential")
-    public ResponseEntity<?> getConfidentialInformation(@AuthenticationPrincipal UserEntity user) {
-
-        Optional<MissionEntity> mission = missionRepository.findByMissionCode(user.getMissionCode());
-
-        if (mission.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Mission not found for user");
-        }
-
-        MissionEntity activeMission = mission.get();
-
-        MissionReportConfidential confidentialReport = new MissionReportConfidential(
-                activeMission.getMissionCode(),
-                activeMission.getDescription(),
-                activeMission.getClassification(),
-                activeMission.getMissionStatus(),
-                activeMission.getPlanetName()
-        );
-
-        System.out.println("User role: " + user.getRole());
-        System.out.println("Authorities: " + user.getAuthorities());
-
-
-        return ResponseEntity.ok(confidentialReport);
-    }
 
 }

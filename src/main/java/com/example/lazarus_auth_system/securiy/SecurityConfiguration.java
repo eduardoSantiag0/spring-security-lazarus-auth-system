@@ -1,5 +1,7 @@
 package com.example.lazarus_auth_system.securiy;
 
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,10 +21,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@SecurityScheme(name = SecurityConfiguration.SECURITY_HEADER, type = SecuritySchemeType.HTTP, bearerFormat = "JWT", scheme = "bearer")
 public class SecurityConfiguration {
 
     @Autowired
     private SecurityFilter securityFilter;
+
+    public static final String SECURITY_HEADER = "bearerAuth";
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -30,14 +35,15 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement( session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests( authorize->authorize
-                                .requestMatchers(HttpMethod.POST, "/lazarus/auth/login").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/lazarus/auth/login","/lazarus/auth//update-token" ).permitAll()
                                 .requestMatchers(HttpMethod.POST, "/lazarus/auth/signup").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/lazarus/auth/logout").authenticated()
 
                         .requestMatchers(HttpMethod.GET, "/lazarus/mission/confidential").hasRole("SCIENTIST")
-                        .requestMatchers(HttpMethod.PUT, "/lazarus/mission").hasRole("SCIENTIST")
+                        .requestMatchers(HttpMethod.PATCH, "/lazarus/mission").hasRole("SCIENTIST")
                         .requestMatchers(HttpMethod.GET, "/lazarus/mission").hasRole("ENGINEER")
-
                         .requestMatchers(HttpMethod.GET, "/lazarus/users/me").authenticated()
+                        .requestMatchers("/v3/api-docs/**", "swagger-ui/**", "swagger-ui.html").permitAll()
                         .anyRequest().permitAll()
 //                        .anyRequest().authenticated()
                 )
