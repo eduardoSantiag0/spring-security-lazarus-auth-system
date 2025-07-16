@@ -104,7 +104,6 @@ public class AuthController {
     ) throws Exception {
         String token = tokenService.extractToken(request);
 
-
         String subject = tokenService.validateToken(token);
         if (subject.isEmpty()) {
             return ResponseEntity.badRequest().body("Empty token");
