@@ -1,6 +1,5 @@
-package com.example.lazarus_auth_system.dtos;
+package com.example.lazarus_auth_system.securiy.dtos;
 
-import com.example.lazarus_auth_system.domain.Mission;
 import com.example.lazarus_auth_system.domain.enums.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
 

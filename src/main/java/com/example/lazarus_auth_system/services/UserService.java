@@ -1,6 +1,6 @@
 package com.example.lazarus_auth_system.services;
 
-import com.example.lazarus_auth_system.dtos.ChangeLoginDTO;
+import com.example.lazarus_auth_system.securiy.dtos.ChangeLoginDTO;
 import com.example.lazarus_auth_system.infra.persistance.UserEntity;
 import com.example.lazarus_auth_system.infra.persistance.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

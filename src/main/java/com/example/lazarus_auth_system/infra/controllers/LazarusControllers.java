@@ -1,6 +1,6 @@
 package com.example.lazarus_auth_system.infra.controllers;
 
-import com.example.lazarus_auth_system.dtos.mission_reports.MissionUpdateDTO;
+import com.example.lazarus_auth_system.domain.dtos.MissionUpdateDTO;
 import com.example.lazarus_auth_system.infra.persistance.UserEntity;
 import com.example.lazarus_auth_system.securiy.SecurityConfiguration;
 import com.example.lazarus_auth_system.services.AuthService;

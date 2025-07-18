@@ -1,7 +1,6 @@
 package com.example.lazarus_auth_system.securiy;
 
 
-import com.example.lazarus_auth_system.infra.persistance.UserEntity;
 import com.example.lazarus_auth_system.infra.persistance.UserRepository;
 import com.example.lazarus_auth_system.services.BlacklistService;
 import com.example.lazarus_auth_system.services.TokenService;

@@ -1,9 +1,9 @@
 package com.example.lazarus_auth_system.infra.controllers;
 
 import com.example.lazarus_auth_system.domain.User;
-import com.example.lazarus_auth_system.dtos.*;
 import com.example.lazarus_auth_system.infra.persistance.UserEntity;
 import com.example.lazarus_auth_system.securiy.SecurityConfiguration;
+import com.example.lazarus_auth_system.securiy.dtos.*;
 import com.example.lazarus_auth_system.services.BlacklistService;
 import com.example.lazarus_auth_system.services.TokenService;
 import com.example.lazarus_auth_system.services.AuthService;
@@ -94,8 +94,6 @@ public class AuthController {
 
     }
 
-    //todo Logout só funciona com refresh token
-
     @PostMapping("/logout")
     @Operation(summary = "Logout User")
     @ApiResponse(responseCode = "200", description = "User login successful")
@@ -120,10 +118,8 @@ public class AuthController {
     }
 
 
-    //todo
-//    @PostMapping("/esqueci-minha-senha")
-//    public ResponseEntity<String> alterarLogin(@RequestBody @Validated AuthenticationDTO data) {
-//    }
+
+
 
 
     @PostMapping("/update-login")

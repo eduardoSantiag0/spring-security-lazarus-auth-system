@@ -1,6 +1,6 @@
 package com.example.lazarus_auth_system.services;
 
-import com.example.lazarus_auth_system.dtos.RegisterDTO;
+import com.example.lazarus_auth_system.securiy.dtos.RegisterDTO;
 import com.example.lazarus_auth_system.infra.persistance.UserEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.example.lazarus_auth_system.dtos;
+package com.example.lazarus_auth_system.securiy.dtos;
 
 import java.util.Optional;
 

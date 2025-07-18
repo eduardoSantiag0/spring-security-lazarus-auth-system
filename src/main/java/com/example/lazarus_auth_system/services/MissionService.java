@@ -1,17 +1,15 @@
 package com.example.lazarus_auth_system.services;
 
-import com.example.lazarus_auth_system.dtos.mission_reports.MissionReportConfidential;
-import com.example.lazarus_auth_system.dtos.mission_reports.MissionReportGeneral;
-import com.example.lazarus_auth_system.dtos.mission_reports.MissionUpdateDTO;
+import com.example.lazarus_auth_system.domain.dtos.MissionReportConfidential;
+import com.example.lazarus_auth_system.domain.dtos.MissionReportGeneral;
+import com.example.lazarus_auth_system.domain.dtos.MissionUpdateDTO;
 import com.example.lazarus_auth_system.infra.persistance.MissionEntity;
 import com.example.lazarus_auth_system.infra.persistance.MissionRepository;
 import com.example.lazarus_auth_system.infra.persistance.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Optional;
 

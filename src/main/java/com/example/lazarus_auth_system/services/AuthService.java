@@ -1,11 +1,10 @@
 package com.example.lazarus_auth_system.services;
 
-import com.example.lazarus_auth_system.dtos.LoginTokenResponseDTO;
-import com.example.lazarus_auth_system.dtos.RegisterDTO;
-import com.example.lazarus_auth_system.dtos.ChangeLoginDTO;
 import com.example.lazarus_auth_system.infra.persistance.MissionRepository;
 import com.example.lazarus_auth_system.infra.persistance.UserEntity;
 import com.example.lazarus_auth_system.infra.persistance.UserRepository;
+import com.example.lazarus_auth_system.securiy.dtos.ChangeLoginDTO;
+import com.example.lazarus_auth_system.securiy.dtos.RegisterDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -63,6 +62,7 @@ public class AuthService implements UserDetailsService {
                 .body("User registered: " + newUser.getUsername());
     }
 
+
     public ResponseEntity<?> changeCredentials(ChangeLoginDTO resetPasswordDTO, UserEntity user) {
 
         if (!passwordEncoder.matches(resetPasswordDTO.currentPassword(), user.getPassword())) {
@@ -74,8 +74,6 @@ public class AuthService implements UserDetailsService {
         return ResponseEntity.ok("Credentials updated successfully");
 
     }
-
-
 
 
     public void updateRefreshToken(UserEntity user, String newRefreshToken) {
